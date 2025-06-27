@@ -1,21 +1,12 @@
 import cv2, time
-import torch
 from ultralytics import YOLO
 from datetime import datetime, timedelta
 from app.camera import set_frame, setup_rtsp_capture
 from app.utils import save_and_post_image
-from app.config import MODEL_PATH, CONFIDENCE_THRESHOLD, IOU_THRESHOLD, POST_DELAY_MINUTES, RTSP_SETTINGS, GPU_SETTINGS
-from app.gpu_utils import setup_gpu_environment, optimize_model_for_gpu, GPUPerformanceMonitor, print_gpu_stats
-
-# Setup GPU environment
-device = setup_gpu_environment()
-
-# Initialize performance monitor
-gpu_monitor = GPUPerformanceMonitor()
+from app.config import MODEL_PATH, CONFIDENCE_THRESHOLD, IOU_THRESHOLD, POST_DELAY_MINUTES, RTSP_SETTINGS
 
 # Inisialisasi model dan class label
 model = YOLO(MODEL_PATH)
-model = optimize_model_for_gpu(model, device)
 cocoClassNames = ['Hardhat', 'Mask', 'NO-Hardhat', 'NO-Mask', 'NO-Safety Vest', 'Person',
                   'Safety Cone', 'Safety Vest', 'machinery', 'vehicle']
 
@@ -77,26 +68,7 @@ def run_detection(cap, video_writer, rtsp_url=None):
         process_detection = detection_skip % detection_interval == 0
 
         if process_detection:
-            # GPU optimized inference with performance monitoring
-            gpu_monitor.start_inference()
-            
-            with torch.no_grad():
-                results = model.track(
-                    frame, 
-                    persist=True, 
-                    conf=CONFIDENCE_THRESHOLD, 
-                    iou=IOU_THRESHOLD,
-                    device=device,
-                    half=GPU_SETTINGS['half_precision'] if device.startswith('cuda') else False,
-                    verbose=False
-                )
-            
-            gpu_monitor.end_inference()
-            
-            # Print GPU stats every 100 frames
-            if gpu_monitor.frame_count % 100 == 0:
-                gpu_monitor.print_stats()
-                print_gpu_stats()
+            results = model.track(frame, persist=True, conf=CONFIDENCE_THRESHOLD, iou=IOU_THRESHOLD)
 
             person_boxes = []
             no_helmet_boxes = []

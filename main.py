@@ -16,8 +16,7 @@ encoded_password = quote(password)
 
 # RTSP URL configuration
 # rtsp_url = f"rtsp://{username}:{encoded_password}@10.24.240.67:554/Streaming/Channels/101"
-# rtsp_url = "rtsp://admin:Network2011*@10.24.240.171:554/Streaming/Channels/101"
-rtsp_url = 'rtsp://admin:Network2011*@10.24.240.191:554/Streaming/Channels/101'
+rtsp_url = "rtsp://admin:Network2011*@10.24.240.171:554/Streaming/Channels/101"
 
 # Setup RTSP capture with optimized settings
 cap = setup_rtsp_capture(rtsp_url)

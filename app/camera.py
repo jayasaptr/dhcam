@@ -1,31 +1,13 @@
 import cv2
 import time
-from app.config import RTSP_SETTINGS, GPU_SETTINGS
-
-# Check if OpenCV has CUDA support
-try:
-    cv2_build_info = cv2.getBuildInformation()
-    OPENCV_CUDA_AVAILABLE = 'CUDA' in cv2_build_info and 'YES' in cv2_build_info
-    if OPENCV_CUDA_AVAILABLE and GPU_SETTINGS['use_cuda_opencv']:
-        print("✅ OpenCV CUDA acceleration enabled")
-    else:
-        print("ℹ️ OpenCV CUDA not available or disabled")
-except:
-    OPENCV_CUDA_AVAILABLE = False
-    print("ℹ️ Could not detect OpenCV CUDA support")
+from app.config import RTSP_SETTINGS
 
 frame_global = None
 last_frame_time = 0
 
 def setup_rtsp_capture(rtsp_url):
     """Setup RTSP capture with optimized settings for minimal latency"""
-    # Use CUDA backend if available
-    if OPENCV_CUDA_AVAILABLE and GPU_SETTINGS['use_cuda_opencv']:
-        cap = cv2.VideoCapture(rtsp_url, cv2.CAP_FFMPEG)
-        # Try to use GPU backend
-        cap.set(cv2.CAP_PROP_HW_ACCELERATION, cv2.VIDEO_ACCELERATION_ANY)
-    else:
-        cap = cv2.VideoCapture()
+    cap = cv2.VideoCapture()
     
     # Ultra low latency settings - set before opening
     cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Minimal buffer
