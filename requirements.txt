@@ -4,3 +4,7 @@ opencv-python
 flask
 flask-cors
 requests
+torch
+torchvision
+# For GPU support, install CUDA version:
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118

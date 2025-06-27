@@ -22,8 +22,19 @@ RTSP_SETTINGS = {
     'enable_hevc': True,
     'use_ffmpeg_cmd': False,
     'max_retries': 5,
-    'retry_delay': 1,  # Reduced delay
-    'timeout_ms': 3000,  # Reduced timeout
-    'buffer_size': 1,  # Minimal buffer
+    'retry_delay': 2,
+    'timeout_ms': 5000,
+    'buffer_size': 10,
     'low_latency': True
+}
+
+# GPU Configuration
+GPU_SETTINGS = {
+    'enable_gpu': True,
+    'device': 'cuda:0',  # Use first CUDA device
+    'use_cuda_opencv': True,
+    'gpu_memory_fraction': 0.8,  # Use 80% of GPU memory
+    'mixed_precision': True,  # Enable mixed precision for faster inference
+    'batch_size': 1,  # Batch size for inference
+    'half_precision': True,  # Use FP16 for faster inference
 }
