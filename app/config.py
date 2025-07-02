@@ -4,15 +4,15 @@ import os
 MODEL_PATH = "best.pt"
 
 # Folder output
-OUTPUT_FOLDER = os.path.join("static", "no_hardhat_detected")
+OUTPUT_FOLDER = os.path.join("static", "no_helmet_detected")
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 # Post API target
-POST_URL = "http://127.0.0.1:8000/api/offenses"
+POST_URL = "http://10.24.240.141:8002/api/offenses"
 
 # Deteksi
-CONFIDENCE_THRESHOLD = 0.3
-IOU_THRESHOLD = 0.3
+CONFIDENCE_THRESHOLD = 0.2
+IOU_THRESHOLD = 0.2
 
 # Delay POST per orang
 POST_DELAY_MINUTES = 5

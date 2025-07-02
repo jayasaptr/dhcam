@@ -4,21 +4,25 @@ import requests
 from datetime import datetime, timedelta
 from app.config import POST_URL
 
-# Dictionary untuk menyimpan file terakhir dan waktu post-nya
 last_posted_images = {}
 
 def save_and_post_image(frame, x1, y1, x2, y2, image_key, item):
     now = datetime.now()
-    cropped = frame[y1:y2, x1:x2]
 
-    # Cek apakah gambar ini sudah di-post dalam 5 menit terakhir
+    # Gunakan full frame jika koordinat tidak disediakan
+    if all(v is not None for v in [x1, y1, x2, y2]):
+        cropped = frame[y1:y2, x1:x2]
+    else:
+        cropped = frame
+
+    # Cek delay 5 menit berdasarkan image_key
     if image_key in last_posted_images:
         last_time = last_posted_images[image_key]
         if now - last_time < timedelta(minutes=5):
             print(f"⏳ Lewatkan post {image_key}, masih dalam 5 menit terakhir.")
             return False, None
 
-    # Encode gambar ke memory (tanpa simpan ke disk)
+    # Encode gambar ke buffer
     success, buffer = cv2.imencode('.jpg', cropped)
     if not success:
         print("❌ Gagal encode gambar.")
@@ -36,7 +40,7 @@ def save_and_post_image(frame, x1, y1, x2, y2, image_key, item):
         }
         response = requests.post(POST_URL, data=data, files=files)
         if response.status_code in [200, 201]:
-            last_posted_images[image_key] = now  # Simpan waktu post terakhir
+            last_posted_images[image_key] = now
             print(f"✅ POST berhasil untuk {image_key}")
             return True, None
         else:

@@ -6,6 +6,7 @@ from app.camera import generate_frames, setup_rtsp_capture
 from app.detection import run_detection
 import os
 from urllib.parse import quote
+import torch
 
 app = Flask(__name__)
 CORS(app)
@@ -15,8 +16,8 @@ password = "Network2011#"
 encoded_password = quote(password)
 
 # RTSP URL configuration
-# rtsp_url = f"rtsp://{username}:{encoded_password}@10.24.240.67:554/Streaming/Channels/101"
-rtsp_url = "rtsp://admin:Network2011*@10.24.240.171:554/Streaming/Channels/101"
+# rtsp_url = f"rtsp://{username}:{encoded_password}@10.24.241.79:554/Streaming/Channels/101"
+rtsp_url = f"rtsp://admin:Network2011*@10.24.240.171:554/Streaming/Channels/101"
 
 # Setup RTSP capture with optimized settings
 cap = setup_rtsp_capture(rtsp_url)
@@ -41,8 +42,8 @@ def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def run_flask():
-    print("✅ Flask running on http://localhost:5000/video_feed")
-    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+    print("✅ Flask running on http://localhost:5001/video_feed")
+    app.run(host='0.0.0.0', port=5001, debug=False, threaded=True)
 
 if __name__ == "__main__":
     try:
