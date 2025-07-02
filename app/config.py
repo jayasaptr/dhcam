@@ -12,7 +12,7 @@ POST_URL = "http://10.24.240.141:8002/api/offenses"
 
 # Deteksi
 CONFIDENCE_THRESHOLD = 0.2
-IOU_THRESHOLD = 0.2
+IOU_THRESHOLD = 0.4
 
 # Delay POST per orang
 POST_DELAY_MINUTES = 5
